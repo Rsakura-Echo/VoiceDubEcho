@@ -9,21 +9,13 @@ python/
 # Bundled tools (downloaded by setup.bat)
 tools/
 
-# User local data
-data/
-model/voices/
-model/huggingface/
-
-# Model weights — distributed via cloud storage, not git
-model/indextts/
-model/indextts_repo/checkpoints/
-model/indextts_repo/.tts_server*.pid
-model/indextts_repo/.venv/
-model/speaker/
-model/punctuation_funasr/
-model/punctuation/
-model/torch-*.whl
+# Model files — distributed via cloud storage, not git
+model/
+!model/.gitkeep
 punkt_tab.zip
+
+# User local data (runtime)
+data/
 
 # Claude Code internal files
 .claude/
@@ -37,7 +29,6 @@ _fix_paths.py
 _rv9.txt
 _server_err.log
 download_speaker_model.py
-model/indextts_repo/.tts_worker.ready
 
 # Distribution packages (local build artifacts)
 VoiceDub_Full/
