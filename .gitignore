@@ -1,0 +1,48 @@
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Bundled Python runtime — distributed via cloud storage, not git
+python/
+
+# Bundled tools (downloaded by setup.bat)
+tools/
+
+# User local data
+data/
+model/voices/
+model/huggingface/
+
+# Model weights — distributed via cloud storage, not git
+model/indextts/
+model/indextts_repo/checkpoints/
+model/indextts_repo/.tts_server*.pid
+model/indextts_repo/.venv/
+model/speaker/
+model/punctuation_funasr/
+model/punctuation/
+model/torch-*.whl
+punkt_tab.zip
+
+# Claude Code internal files
+.claude/
+.superpowers/
+memory/
+docs/
+
+# Temp / debug / log files
+_punct_*.txt
+_fix_paths.py
+_rv9.txt
+_server_err.log
+download_speaker_model.py
+model/indextts_repo/.tts_worker.ready
+
+# Distribution packages (local build artifacts)
+VoiceDub_Full/
+_cloud_package/
+*.zip.baiduyun.uploading.cfg
+
+# Local media files
+*.mp4

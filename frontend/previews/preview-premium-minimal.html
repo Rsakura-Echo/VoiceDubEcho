@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoiceDub — 高级极简风</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@350;400;450;500;550;600&display=swap" rel="stylesheet">
+<style>
+  /* ===== Design Tokens ===== */
+  :root {
+    --bg:        #FAFAF9;
+    --surface:   #FFFFFF;
+    --subtle:    #F5F5F4;
+    --border:    #E7E5E4;
+    --border-hi: #D6D3D1;
+
+    --text:      #1C1917;
+    --text1:     #44403C;
+    --text2:     #78716C;
+    --text3:     #A8A29E;
+    --text4:     #D6D3D1;
+
+    --accent:    #2563EB;
+    --accent-hi: #1D4ED8;
+    --accent-lo: #EFF6FF;
+
+    --success:   #059669;
+    --success-lo:#ECFDF5;
+    --danger:    #DC2626;
+    --danger-lo: #FEF2F2;
+
+    --radius:  6px;
+    --radius-m:8px;
+
+    --shadow-xs: 0 1px 2px rgba(0,0,0,.03);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.04), 0 1px 2px rgba(0,0,0,.03);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.05), 0 1px 2px rgba(0,0,0,.04);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,.06), 0 2px 6px rgba(0,0,0,.03);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.55;
+    min-height: 100vh;
+  }
+
+  /* ===== Top Bar ===== */
+  #topbar {
+    background: rgba(255,255,255,.82); backdrop-filter: blur(12px) saturate(1.4);
+    -webkit-backdrop-filter: blur(12px) saturate(1.4);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px; height: 46px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  #brand { font-weight: 550; font-size: 14px; cursor: pointer; letter-spacing: -.02em; color: var(--text); }
+  #version { font-size: 11px; color: var(--text3); font-weight: 400; margin-left: 6px; letter-spacing: -.01em; }
+  #topbar nav { display: flex; gap: 2px; }
+  #topbar nav button {
+    font-size: 12.5px; font-weight: 450; color: var(--text2); background: none;
+    border: none; border-radius: 5px; padding: 5px 14px; cursor: pointer; font-family: inherit;
+    letter-spacing: -.01em; transition: all .15s;
+  }
+  #topbar nav button:hover { color: var(--text); background: var(--subtle); }
+  #topbar nav button.active {
+    color: var(--text); font-weight: 500; background: var(--subtle);
+  }
+
+  /* ===== Main ===== */
+  main { max-width: 1040px; margin: 0 auto; padding: 36px 28px 80px; }
+
+  /* ===== Page Header ===== */
+  .page-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 28px; }
+  .page-header h2 { font-size: 17px; font-weight: 550; letter-spacing: -.02em; }
+  .back-link {
+    font-size: 12px; font-weight: 450; color: var(--text2); cursor: pointer;
+    padding: 4px 12px; border: 1px solid var(--border); border-radius: 20px;
+    background: var(--surface); transition: all .15s; letter-spacing: -.01em;
+  }
+  .back-link:hover { border-color: var(--border-hi); color: var(--text1); }
+
+  /* ===== Toolbar ===== */
+  .toolbar {
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    margin-bottom: 18px; padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .btn {
+    font-size: 12.5px; font-weight: 500; padding: 6px 16px; border-radius: var(--radius);
+    cursor: pointer; font-family: inherit; border: 1px solid transparent;
+    letter-spacing: -.01em; transition: all .12s;
+    display: inline-flex; align-items: center; gap: 5px;
+    line-height: 1.4;
+  }
+  .btn-primary {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+    font-weight: 500; box-shadow: 0 1px 2px rgba(37,99,235,.15);
+  }
+  .btn-primary:hover { background: var(--accent-hi); box-shadow: 0 2px 6px rgba(37,99,235,.2); }
+  .btn-secondary {
+    background: var(--surface); border-color: var(--border); color: var(--text1);
+    box-shadow: var(--shadow-xs);
+  }
+  .btn-secondary:hover { border-color: var(--border-hi); background: var(--subtle); }
+  .btn-ghost {
+    background: none; border-color: transparent; color: var(--text2);
+  }
+  .btn-ghost:hover { background: var(--subtle); color: var(--text1); }
+  .btn-sm {
+    font-size: 11.5px; padding: 4px 12px; border-radius: 5px; font-weight: 450;
+    cursor: pointer; font-family: inherit; border: 1px solid transparent;
+    letter-spacing: -.01em; transition: all .12s; line-height: 1.4;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .btn-sm.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-sm.primary:hover { background: var(--accent-hi); }
+  .btn-sm.secondary { background: var(--surface); border-color: var(--border); color: var(--text1); }
+  .btn-sm.secondary:hover { border-color: var(--border-hi); background: var(--subtle); }
+  .btn-sm.ghost { background: none; border-color: transparent; color: var(--text2); padding: 4px 8px; }
+  .btn-sm.ghost:hover { background: var(--subtle); color: var(--text1); }
+  .btn-sm.success { background: var(--success-lo); color: var(--success); border-color: transparent; }
+  .btn-sm.success:hover { background: #D1FAE5; }
+
+  /* ===== Speaker Filter ===== */
+  .filter-row {
+    display: flex; gap: 14px; align-items: center; margin-bottom: 16px;
+    flex-wrap: wrap; font-size: 12px;
+  }
+  .filter-row label {
+    display: flex; align-items: center; gap: 6px; cursor: pointer;
+    color: var(--text1); margin: 0; font-size: 12.5px; font-weight: 450;
+  }
+  .speaker-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  input[type="checkbox"] {
+    accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer;
+  }
+
+  /* ===== Segment Card ===== */
+  .segment-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-m); margin-bottom: 6px;
+    box-shadow: var(--shadow-xs); transition: all .15s;
+  }
+  .segment-card:hover {
+    border-color: var(--border-hi);
+    box-shadow: var(--shadow-sm);
+  }
+  .seg-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 18px; flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    background: var(--subtle);
+    border-radius: var(--radius-m) var(--radius-m) 0 0;
+  }
+  .seg-checkbox { flex-shrink: 0; }
+  .seg-speaker {
+    font-size: 11.5px; font-weight: 500; padding: 2px 10px; border-radius: 12px;
+    letter-spacing: -.01em; flex-shrink: 0;
+  }
+  .seg-time { font-size: 11.5px; color: var(--text2); font-weight: 450; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+  .seg-badge {
+    font-size: 10.5px; font-weight: 500; padding: 1px 9px; border-radius: 10px;
+    background: var(--success-lo); color: var(--success); letter-spacing: -.01em;
+  }
+  .seg-spacer { flex: 1; min-width: 12px; }
+  .seg-actions { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+
+  /* Emotion button */
+  .emo-btn {
+    font-size: 11.5px; font-weight: 450; padding: 4px 11px; border-radius: 5px;
+    border: 1px solid var(--border); background: var(--surface); color: var(--text1);
+    cursor: pointer; font-family: inherit; letter-spacing: -.01em;
+    transition: all .12s; line-height: 1.4;
+  }
+  .emo-btn:hover { border-color: var(--border-hi); }
+  .emo-btn.active {
+    background: var(--accent-lo); color: var(--accent); border-color: #BFDBFE; font-weight: 500;
+  }
+
+  /* ===== Segment Body ===== */
+  .seg-body { display: flex; flex-direction: column; padding: 0 18px; }
+  .text-row { display: flex; gap: 10px; align-items: flex-start; padding: 12px 0; }
+  .text-row + .text-row { border-top: 1px solid var(--border); }
+
+  /* Play button */
+  .play-btn {
+    width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0; color: var(--text2); transition: all .12s;
+    margin-top: 2px;
+  }
+  .play-btn:hover { background: var(--accent-lo); color: var(--accent); }
+  .play-btn svg { width: 12px; height: 12px; fill: currentColor; }
+
+  /* Original text */
+  .text-orig {
+    flex: 1; padding: 6px 0; font-size: 13.5px; color: var(--text2);
+    line-height: 1.65; word-break: break-word; letter-spacing: -.01em;
+  }
+
+  /* Editable textarea */
+  textarea.text-edit {
+    flex: 1; padding: 6px 10px; margin: -2px -10px;
+    font-size: 13.5px; color: var(--text); font-family: inherit;
+    resize: vertical; min-height: 34px; line-height: 1.65;
+    border: 1px solid transparent; border-radius: 5px;
+    background: transparent; outline: none;
+    letter-spacing: -.01em; transition: all .12s;
+  }
+  textarea.text-edit:hover { background: var(--subtle); border-color: var(--border); }
+  textarea.text-edit:focus {
+    background: var(--surface); border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(37,99,235,.08);
+    padding: 6px 10px; margin: -2px -10px;
+  }
+
+  /* ===== Between-segment zone ===== */
+  .seg-between {
+    height: 20px; display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .15s;
+    margin: -2px 0;
+  }
+  .seg-between:hover { opacity: 1; }
+  .seg-between-inner { display: flex; gap: 10px; }
+  .seg-between-inner .btn-sm.ghost {
+    font-size: 11px; padding: 2px 8px; border-radius: 4px;
+    background: var(--surface); border: 1px solid var(--border);
+    box-shadow: var(--shadow-xs); color: var(--text2);
+  }
+  .seg-between-inner .btn-sm.ghost:hover {
+    border-color: var(--border-hi); color: var(--accent); background: var(--accent-lo);
+  }
+
+  /* ===== Task Panel ===== */
+  #task-panel {
+    position: fixed; bottom: 0; right: 28px; width: 296px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 -2px 16px rgba(0,0,0,.04), 0 -1px 3px rgba(0,0,0,.03);
+    z-index: 100; font-size: 12px;
+  }
+  #task-panel-header {
+    padding: 9px 16px; cursor: pointer; display: flex; justify-content: space-between;
+    font-weight: 500; border-bottom: 1px solid var(--border);
+    user-select: none; font-size: 12px; letter-spacing: -.01em;
+    color: var(--text1); border-radius: 10px 10px 0 0;
+  }
+  #task-panel-header:hover { background: var(--subtle); }
+  #task-panel-body { padding: 8px 16px 16px; max-height: 200px; overflow-y: auto; }
+  .task-item {
+    padding: 7px 0; font-size: 11.5px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--text2); letter-spacing: -.01em;
+  }
+  .task-item:last-child { border-bottom: none; }
+
+  /* ===== Scrollbar ===== */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border-hi); }
+
+  /* ===== Animations ===== */
+  @media (prefers-reduced-motion: no-preference) {
+    .segment-card, .btn, .btn-sm, .back-link, textarea.text-edit {
+      transition-duration: .12s;
+    }
+  }
+
+  /* ===== Selection ===== */
+  ::selection { background: rgba(37,99,235,.15); color: var(--text); }
+</style>
+</head>
+<body>
+
+<header id="topbar">
+  <div style="display:flex;align-items:baseline;gap:2px">
+    <span id="brand">VoiceDub</span>
+    <span id="version">v1.0.0</span>
+  </div>
+  <nav>
+    <button class="active">项目</button>
+    <button>音色库</button>
+    <button>模型管理</button>
+    <button>设置</button>
+  </nav>
+</header>
+
+<main>
+  <div class="page-header">
+    <span class="back-link">← 返回</span>
+    <h2>配音项目_2026-06-03</h2>
+    <div></div>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn btn-primary">批量配音</button>
+    <button class="btn btn-secondary">批量克隆</button>
+    <button class="btn btn-secondary">导出音频</button>
+    <button class="btn btn-ghost">SRT</button>
+    <button class="btn btn-ghost">ASS</button>
+  </div>
+
+  <div class="filter-row">
+    <label><input type="checkbox" checked> 全选</label>
+    <span style="color:var(--text3);font-size:12px;font-weight:450">说话人</span>
+    <label style="color:#2563EB"><span class="speaker-dot" style="background:#2563EB"></span> <input type="checkbox" checked> 张三</label>
+    <label style="color:#7C3AED"><span class="speaker-dot" style="background:#7C3AED"></span> <input type="checkbox" checked> 李四</label>
+    <label style="color:#D97706"><span class="speaker-dot" style="background:#D97706"></span> <input type="checkbox" checked> 王五</label>
+  </div>
+
+  <div id="segments">
+    <!-- Segment 1 -->
+    <div class="segment-card">
+      <div class="seg-header">
+        <input type="checkbox" class="seg-checkbox" checked>
+        <span class="seg-speaker" style="background:#EFF6FF;color:#2563EB">张三</span>
+        <span class="seg-time">0.0s – 3.2s</span>
+        <span class="seg-badge">已配音</span>
+        <span class="seg-spacer"></span>
+        <div class="seg-actions">
+          <button class="emo-btn active">情绪</button>
+          <button class="btn-sm primary">重新配音</button>
+          <button class="btn-sm secondary">克隆配音</button>
+          <button class="btn-sm success">下载配音</button>
+        </div>
+      </div>
+      <div class="seg-body">
+        <div class="text-row">
+          <span class="play-btn"><svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg></span>
+          <div class="text-orig">大家好，欢迎收听今天的节目。今天我们聊一个有趣的话题。</div>
+        </div>
+        <div class="text-row">
+          <span class="play-btn"><svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg></span>
+          <textarea class="text-edit">大家好，欢迎收听今天的节目。今天我们聊一个有趣的话题。</textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="seg-between"><div class="seg-between-inner"><button class="btn-sm ghost">+ 插入</button><button class="btn-sm ghost">合并</button></div></div>
+
+    <!-- Segment 2 -->
+    <div class="segment-card">
+      <div class="seg-header">
+        <input type="checkbox" class="seg-checkbox" checked>
+        <span class="seg-speaker" style="background:#F5F3FF;color:#7C3AED">李四</span>
+        <span class="seg-time">3.5s – 7.8s</span>
+        <span class="seg-spacer"></span>
+        <div class="seg-actions">
+          <button class="emo-btn">情绪</button>
+          <button class="btn-sm primary">开始配音</button>
+          <button class="btn-sm secondary">克隆配音</button>
+        </div>
+      </div>
+      <div class="seg-body">
+        <div class="text-row">
+          <span class="play-btn"><svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg></span>
+          <div class="text-orig">是啊，这个话题确实很有意思，我也一直想聊聊这个。</div>
+        </div>
+        <div class="text-row">
+          <span class="play-btn" style="visibility:hidden"><svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg></span>
+          <textarea class="text-edit" placeholder="编辑台词...">是啊，这个话题确实很有意思，我也一直想聊聊这个。</textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="seg-between"><div class="seg-between-inner"><button class="btn-sm ghost">+ 插入</button><button class="btn-sm ghost">合并</button></div></div>
+
+    <!-- Segment 3 -->
+    <div class="segment-card">
+      <div class="seg-header">
+        <input type="checkbox" class="seg-checkbox" checked>
+        <span class="seg-speaker" style="background:#FFFBEB;color:#D97706">王五</span>
+        <span class="seg-time">8.1s – 12.6s</span>
+        <span class="seg-badge">已配音</span>
+        <span class="seg-spacer"></span>
+        <div class="seg-actions">
+          <button class="emo-btn active">情绪</button>
+          <button class="btn-sm primary">重新配音</button>
+          <button class="btn-sm secondary">克隆配音</button>
+          <button class="btn-sm success">下载配音</button>
+        </div>
+      </div>
+      <div class="seg-body">
+        <div class="text-row">
+          <span class="play-btn"><svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg></span>
+          <div class="text-orig">那我们开始吧，先从第一个问题说起。</div>
+        </div>
+        <div class="text-row">
+          <span class="play-btn"><svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg></span>
+          <textarea class="text-edit">那我们开始吧，先从第一个问题说起。</textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="task-panel">
+  <div id="task-panel-header"><span>任务</span><span style="font-weight:500;color:var(--text)">2</span></div>
+  <div id="task-panel-body">
+    <div class="task-item"><span>批量配音 · 张三 0.0–3.2s</span><span style="color:var(--success);font-weight:500">完成 · 2.1s</span></div>
+    <div class="task-item"><span>批量配音 · 王五 8.1–12.6s</span><span style="color:var(--accent);font-weight:500">处理中…</span></div>
+  </div>
+</div>
+
+</body>
+</html>

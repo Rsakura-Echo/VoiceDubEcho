@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoiceDub UI 风格预览 — 选择器</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #F8FAFC; color: #0F172A; font-size: 14px;
+    min-height: 100vh; display: flex; flex-direction: column;
+  }
+  header {
+    background: #0F172A; color: #fff; padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  header h1 { font-size: 16px; font-weight: 600; }
+  header span { font-size: 12px; color: #94A3B8; }
+  main {
+    flex: 1; padding: 32px 24px; max-width: 1400px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px; width: 100%;
+  }
+  .card {
+    background: #fff; border: 1px solid #E2E8F0; border-radius: 12px;
+    overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: all 0.2s; cursor: pointer; text-decoration: none; color: inherit;
+    display: flex; flex-direction: column;
+  }
+  .card:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
+  .card-thumb {
+    height: 260px; overflow: hidden; border-bottom: 1px solid #E2E8F0;
+    position: relative;
+  }
+  .card-thumb iframe {
+    width: 480px; height: 360px; border: none;
+    transform: scale(0.66); transform-origin: top left;
+    pointer-events: none;
+  }
+  .card-body { padding: 16px 20px 20px; flex: 1; display: flex; flex-direction: column; }
+  .card-body h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .card-body .subtitle { font-size: 12px; color: #64748B; margin-bottom: 10px; }
+  .card-body .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .tag {
+    font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 500;
+    background: #F1F5F9; color: #475569;
+  }
+  .card-body p { font-size: 12px; color: #64748B; line-height: 1.6; flex: 1; }
+  .card-body .btn {
+    margin-top: 14px; display: inline-block; padding: 8px 18px;
+    background: #2563EB; color: #fff; border-radius: 6px; font-size: 12px;
+    font-weight: 500; text-decoration: none; text-align: center; transition: all 0.15s;
+  }
+  .card-body .btn:hover { background: #1D4ED8; }
+  .note {
+    grid-column: 1 / -1; text-align: center; padding: 12px;
+    color: #94A3B8; font-size: 12px;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>VoiceDub UI 风格预览</h1>
+  <span>点击卡片查看完整预览 → 选择你喜欢的风格进行改造</span>
+</header>
+<main>
+  <a class="card" href="preview-premium-minimal.html" target="_blank" style="border:2px solid #2563EB;box-shadow:0 4px 20px rgba(37,99,235,.1)">
+    <div class="card-thumb" style="background:#FAFAF9">
+      <iframe src="preview-premium-minimal.html" scrolling="no"></iframe>
+    </div>
+    <div class="card-body">
+      <h3>✦ 高级极简风 <span style="font-size:10px;background:#EFF6FF;color:#2563EB;padding:2px 8px;border-radius:10px;font-weight:500;vertical-align:middle">推荐</span></h3>
+      <div class="subtitle">Premium Minimal</div>
+      <div class="tags">
+        <span class="tag">极简主义</span><span class="tag">高级质感</span><span class="tag">暖灰底色</span><span class="tag">微交互</span><span class="tag">4px网格</span>
+      </div>
+      <p>在极简白基础上全面升级。暖灰底色替代纯白，5级文字灰度层次，精细 4px 间距系统，克制的微交互动效，Linear/Apple 级别质感。</p>
+      <span class="btn">查看完整预览 →</span>
+    </div>
+  </a>
+
+  <a class="card" href="preview-dark-pro.html" target="_blank">
+    <div class="card-thumb" style="background:#0B1121">
+      <iframe src="preview-dark-pro.html" scrolling="no"></iframe>
+    </div>
+    <div class="card-body">
+      <h3>🌙 深色专业风</h3>
+      <div class="subtitle">Dark Professional</div>
+      <div class="tags">
+        <span class="tag">深色模式</span><span class="tag">霓虹强调</span><span class="tag">音频工作站</span><span class="tag">专业感</span>
+      </div>
+      <p>深色背景 + 青色霓虹强调色，类似 DAW 音频工作站的沉浸式体验。长时间使用不刺眼，适合需要专注的创作场景。</p>
+      <span class="btn">查看完整预览 →</span>
+    </div>
+  </a>
+
+  <a class="card" href="preview-glassmorphism.html" target="_blank">
+    <div class="card-thumb" style="background:linear-gradient(135deg,#F0F4FF,#F5F3FF)">
+      <iframe src="preview-glassmorphism.html" scrolling="no"></iframe>
+    </div>
+    <div class="card-body">
+      <h3>🫧 现代玻璃拟态</h3>
+      <div class="subtitle">Glassmorphism Modern</div>
+      <div class="tags">
+        <span class="tag">玻璃拟态</span><span class="tag">圆角卡片</span><span class="tag">紫蓝渐变</span><span class="tag">现代清新</span>
+      </div>
+      <p>毛玻璃面板 + 柔和渐变背景 + 圆角卡片布局。Indigo 主色调，视觉温暖且现代，适合追求质感的工具应用。</p>
+      <span class="btn">查看完整预览 →</span>
+    </div>
+  </a>
+
+  <a class="card" href="preview-minimal.html" target="_blank">
+    <div class="card-thumb" style="background:#FFFFFF">
+      <iframe src="preview-minimal.html" scrolling="no"></iframe>
+    </div>
+    <div class="card-body">
+      <h3>⬜ 极简白</h3>
+      <div class="subtitle">Ultra Minimal</div>
+      <div class="tags">
+        <span class="tag">极简主义</span><span class="tag">纯白</span><span class="tag">内容优先</span><span class="tag">无干扰</span>
+      </div>
+      <p>黑白灰为主，几乎无彩色。极少的视觉噪音，让用户完全聚焦于台词内容和编辑操作。干净、克制、高效。</p>
+      <span class="btn">查看完整预览 →</span>
+    </div>
+  </a>
+
+  <a class="card" href="preview-brutalist.html" target="_blank">
+    <div class="card-thumb" style="background:#FFFDF7">
+      <iframe src="preview-brutalist.html" scrolling="no"></iframe>
+    </div>
+    <div class="card-body">
+      <h3>🎨 野兽派创意</h3>
+      <div class="subtitle">Creative Brutalism</div>
+      <div class="tags">
+        <span class="tag">野兽派</span><span class="tag">粗边框</span><span class="tag">大胆配色</span><span class="tag">个性鲜明</span>
+      </div>
+      <p>粗黑边框 + 硬阴影 + 高饱和强调色 + 等宽字体。个性极其鲜明，适合创意工具或想与众不同的产品定位。</p>
+      <span class="btn">查看完整预览 →</span>
+    </div>
+  </a>
+
+  <div class="note">
+    提示：每个预览都是独立 HTML 文件，可单独在浏览器中打开。当前功能与原有系统完全一致，仅视觉风格不同。<br>
+    后端无需任何改动 — 选定风格后，只替换 frontend/css/style.css 和少量 HTML 结构调整。
+  </div>
+</main>
+</body>
+</html>

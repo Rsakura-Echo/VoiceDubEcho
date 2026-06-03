@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoiceDub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@350;400;450;500;550;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header id="topbar">
+  <div style="display:flex;align-items:baseline;gap:2px">
+    <span id="brand" onclick="App.navigate('projects')">VoiceDub</span>
+    <span id="version-badge"></span>
+  </div>
+  <nav>
+    <button id="nav-projects" class="active" onclick="App.navigate('projects')">项目</button>
+    <button id="nav-voices" onclick="App.navigate('voices')">音色库</button>
+    <button onclick="App.openModelManager()">模型管理</button>
+    <button onclick="App.openSettings()">设置</button>
+  </nav>
+</header>
+
+<main id="main-content"></main>
+
+<!-- Settings Modal -->
+<div id="settings-modal" class="modal hidden">
+  <div class="modal-backdrop" onclick="App.closeSettings()"></div>
+  <div class="modal-panel">
+    <h2>系统设置</h2>
+
+    <div class="setting-section">
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">配音模式</span>
+          <span class="setting-desc">本地需要 IndexTTS2 模型（~5.5GB 显存）</span>
+        </div>
+        <div class="setting-toggle">
+          <button id="tts-mode-cloud" class="btn-sm" onclick="App.setTtsMode('cloud')">云端</button>
+          <button id="tts-mode-local" class="btn-sm primary" onclick="App.setTtsMode('local')">本地</button>
+        </div>
+      </div>
+      <div id="local-tts-status" class="hidden" style="margin-top:8px;padding:10px 12px;background:var(--border-light);border-radius:6px;display:flex;align-items:center;justify-content:space-between">
+        <span id="local-tts-status-text">状态: 未启动</span>
+        <button id="btn-start-local-tts" class="btn-sm primary" onclick="App.toggleLocalTts()">启动本地模型</button>
+      </div>
+    </div>
+
+    <div class="setting-section">
+      <label for="setting-api-url">RunningHub API 地址</label>
+      <input id="setting-api-url" type="text" placeholder="http://localhost:8188">
+      <label for="setting-api-key">API Token</label>
+      <input id="setting-api-key" type="password" placeholder="RunningHub 访问令牌">
+      <label for="setting-rh-workflow">配音 Workflow ID</label>
+      <input id="setting-rh-workflow" type="text" placeholder="普通配音工作流 ID">
+      <label for="setting-rh-clone-workflow">克隆配音 Workflow ID</label>
+      <input id="setting-rh-clone-workflow" type="text" placeholder="克隆配音工作流 ID">
+      <label for="setting-hf-token">HuggingFace Token</label>
+      <input id="setting-hf-token" type="password" placeholder="说话人分离模型需要">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="App.closeSettings()">取消</button>
+      <button class="btn-primary" onclick="App.saveSettings()">保存设置</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create Project Modal -->
+<div id="create-project-modal" class="modal hidden">
+  <div class="modal-backdrop" onclick="App.closeCreateProject()"></div>
+  <div class="modal-panel">
+    <h2>创建项目</h2>
+    <label>项目名称</label>
+    <input id="create-project-name" type="text">
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="App.closeCreateProject()">取消</button>
+      <button class="btn-primary" onclick="App._createProject()">确认创建</button>
+    </div>
+  </div>
+</div>
+
+<!-- Model Management Modal -->
+<div id="models-modal" class="modal hidden">
+  <div class="modal-backdrop" onclick="App.closeModelManager()"></div>
+  <div class="modal-panel">
+    <h2>模型管理</h2>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:16px">以下模型需要下载后才能正常使用配音功能</p>
+    <div id="models-list"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="App.closeModelManager()">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- Audio Editor Modal -->
+<div id="audio-editor-modal" class="modal hidden">
+  <div class="modal-backdrop" onclick="AudioEditor.close()"></div>
+  <div class="modal-panel" style="width:720px;max-width:96vw;max-height:90vh;overflow-y:auto">
+    <h2 id="audio-editor-title">音频编辑</h2>
+
+    <!-- Split Section -->
+    <div style="margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)">
+      <h3 style="font-size:13px;font-weight:600;margin-bottom:8px">切割</h3>
+      <div id="ae-split-wrap" style="position:relative;height:80px;background:var(--border-light);border-radius:6px;cursor:crosshair">
+        <canvas id="ae-split-canvas" style="width:100%;height:100%"></canvas>
+        <div id="ae-cursor" style="display:none;position:absolute;top:0;bottom:0;width:2px;background:#DC2626;pointer-events:none"></div>
+      </div>
+      <div id="ae-split-sub" style="font-size:13px;padding:8px 0;min-height:24px;color:var(--text-secondary)"></div>
+      <div class="flex-between">
+        <span id="ae-split-info" style="font-size:11px;color:var(--text-muted)">鼠标移动到波形上设定切割位置</span>
+        <div style="display:flex;gap:6px">
+          <button id="ae-split-play-btn" class="btn-sm" onclick="AudioEditor.playSplitFromCursor()" disabled>当前位置试听</button>
+          <button id="ae-split-btn" class="btn-sm primary" onclick="AudioEditor.confirmSplit()" disabled>确认切割</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trim/Extend Section -->
+    <div>
+      <h3 style="font-size:13px;font-weight:600;margin-bottom:8px">修剪 / 扩展</h3>
+      <div id="ae-trim-wrap" style="position:relative;height:80px;background:var(--border-light);border-radius:6px">
+        <canvas id="ae-trim-canvas" style="width:100%;height:100%"></canvas>
+      </div>
+      <div id="ae-trim-sub" style="font-size:13px;padding:8px 0;min-height:24px;color:var(--text-secondary)"></div>
+      <div class="flex-between">
+        <span id="ae-trim-info" style="font-size:11px;color:var(--text-muted)">拖动把手选择范围</span>
+        <div style="display:flex;gap:6px">
+          <button id="ae-trim-play-btn" class="btn-sm" onclick="AudioEditor.playTrimPreview()" disabled>试听选中音频</button>
+          <button id="ae-trim-apply" class="btn-sm primary" onclick="AudioEditor.applyTrim()" disabled>确认修剪</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions" style="margin-top:16px">
+      <button class="btn-secondary" onclick="AudioEditor.close()">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- Task Panel -->
+<div id="task-panel">
+  <div id="task-panel-header" onclick="App.toggleTaskPanel()" style="padding:8px 12px;cursor:pointer;display:flex;justify-content:space-between;font-weight:600;border-bottom:1px solid var(--border);background:var(--surface)">
+    <span>任务</span>
+    <span id="task-count">0</span>
+  </div>
+  <div id="task-panel-body" style="display:none"></div>
+</div>
+
+<!-- Voice Picker Modal -->
+<div id="voice-pick-modal" class="modal hidden">
+  <div class="modal-backdrop" onclick="document.getElementById('voice-pick-modal').classList.add('hidden')"></div>
+  <div class="modal-panel"></div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="/js/api.js"></script>
+<script src="/js/components.js"></script>
+<script src="/js/audio-editor.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoiceDub — 野兽派创意风</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFDF7; --surface: #FFFFFF;
+    --border: #1A1A1A;
+    --text: #1A1A1A; --text2: #555; --text3: #888;
+    --accent: #FF6B35; --accent2: #E55A2B;
+    --success: #0FA958; --danger: #E03A3A;
+    --yellow: #FFD23F; --purple: #7B2FE8; --teal: #0ED9A3;
+    --shadow-brutal: 3px 3px 0 #1A1A1A;
+    --shadow-brutal-sm: 2px 2px 0 #1A1A1A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text); font-size: 14px; line-height: 1.5;
+    min-height: 100vh;
+    background-image: radial-gradient(circle, #E5E5E5 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Top Bar */
+  #topbar {
+    background: var(--text); border-bottom: 3px solid var(--accent);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; height: 52px; position: sticky; top: 0; z-index: 100;
+  }
+  #brand {
+    color: #fff; font-weight: 700; font-size: 18px; cursor: pointer;
+    letter-spacing: -0.5px; background: var(--accent); padding: 3px 12px;
+    box-shadow: 2px 2px 0 rgba(255,255,255,0.2);
+  }
+  #version { font-size: 10px; color: #888; font-weight: 500; margin-left: 8px; font-family: 'JetBrains Mono', monospace; }
+  #topbar nav { display: flex; gap: 0; }
+  #topbar nav button {
+    font-size: 12px; font-weight: 600; color: #999; background: transparent;
+    border: none; padding: 8px 16px; cursor: pointer; font-family: inherit;
+    text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.1s;
+  }
+  #topbar nav button:hover { color: #fff; }
+  #topbar nav button.active { color: var(--accent); background: rgba(255,107,53,0.1); }
+
+  main { max-width: 1000px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .page-header h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .back-link {
+    font-size: 11px; font-weight: 600; color: var(--text); cursor: pointer;
+    padding: 6px 14px; border: 2px solid var(--border); background: #fff;
+    box-shadow: var(--shadow-brutal-sm); transition: all 0.1s;
+    font-family: 'JetBrains Mono', monospace; text-transform: uppercase;
+  }
+  .back-link:hover { background: var(--yellow); transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--border); }
+  .back-link:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--border); }
+
+  /* Status Bar */
+  .status-bar {
+    background: #fff; border: 2px solid var(--border); box-shadow: var(--shadow-brutal);
+    padding: 14px 18px; margin-bottom: 24px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  }
+  .btn {
+    font-size: 12px; font-weight: 600; padding: 8px 18px; cursor: pointer;
+    font-family: inherit; border: 2px solid var(--border); transition: all 0.1s;
+    display: inline-flex; align-items: center; gap: 5px; text-transform: uppercase;
+    letter-spacing: 0.3px; background: #fff;
+  }
+  .btn-accent { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: var(--shadow-brutal-sm); }
+  .btn-accent:hover { background: var(--accent2); border-color: var(--accent2); transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--border); }
+  .btn-accent:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--border); }
+  .btn-outline { background: #fff; color: var(--text); }
+  .btn-outline:hover { background: var(--yellow); transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--border); }
+  .btn-outline:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--border); }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--text2); font-weight: 500; }
+  .btn-ghost:hover { background: #F5F5F5; }
+
+  .speaker-filter { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; font-size: 12px; }
+  .speaker-filter label { display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text); margin: 0; font-weight: 500; font-size: 12px; }
+  .speaker-dot { width: 10px; height: 10px; border: 2px solid var(--border); display: inline-block; }
+  input[type="checkbox"] {
+    accent-color: var(--accent); width: 16px; height: 16px;
+    border: 2px solid var(--border);
+  }
+
+  /* Segment Card */
+  .segment-card {
+    background: #fff; border: 2px solid var(--border);
+    margin-bottom: 4px; transition: all 0.1s;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.05);
+  }
+  .segment-card:hover { box-shadow: 4px 4px 0 rgba(0,0,0,0.1); transform: translate(-1px, -1px); }
+  .seg-header {
+    display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+    border-bottom: 2px solid var(--border); flex-wrap: wrap;
+    background: #FAFAFA;
+  }
+  .seg-speaker {
+    font-size: 10px; font-weight: 700; padding: 3px 10px;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    border: 2px solid var(--border);
+  }
+  .seg-time { font-size: 11px; font-weight: 500; font-family: 'JetBrains Mono', monospace; color: var(--text2); }
+  .seg-badge {
+    font-size: 9px; font-weight: 700; padding: 3px 8px; text-transform: uppercase;
+    letter-spacing: 0.5px; background: var(--success); color: #fff; border: 2px solid var(--border);
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+  }
+  .seg-spacer { flex: 1; }
+  .seg-actions { display: flex; gap: 6px; align-items: center; }
+  .btn-sm {
+    font-size: 10px; padding: 5px 12px; font-weight: 600;
+    cursor: pointer; font-family: inherit; border: 2px solid var(--border);
+    transition: all 0.1s; text-transform: uppercase; letter-spacing: 0.3px;
+    background: #fff;
+  }
+  .btn-sm.accent { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 1px 1px 0 var(--border); }
+  .btn-sm.accent:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--border); }
+  .btn-sm.accent:active { transform: translate(1px, 1px); box-shadow: 0px 0px 0 var(--border); }
+  .btn-sm.outline { background: #fff; }
+  .btn-sm.outline:hover { background: var(--yellow); transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--border); }
+  .btn-sm.outline:active { transform: translate(1px, 1px); box-shadow: 0px 0px 0 var(--border); }
+  .btn-sm.success { background: var(--teal); color: #1A1A1A; border-color: var(--border); font-weight: 700; }
+  .btn-sm.ghost { background: transparent; border-color: transparent; font-weight: 500; text-transform: none; }
+  .btn-sm.ghost:hover { background: #F0F0F0; }
+
+  .seg-body { display: flex; flex-direction: column; gap: 0; padding: 0 16px; }
+  .text-row { display: flex; gap: 10px; align-items: flex-start; padding: 12px 0; border-bottom: 1px dashed #DDD; }
+  .text-row:last-child { border-bottom: none; }
+  .play-dot {
+    width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0; background: #fff; border: 2px solid var(--border);
+    transition: all 0.1s; box-shadow: 1px 1px 0 var(--border);
+  }
+  .play-dot:hover { background: var(--accent); color: #fff; border-color: var(--accent); transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--border); }
+  .play-dot:active { transform: translate(1px, 1px); box-shadow: 0px 0px 0 var(--border); }
+  .play-dot svg { width: 10px; height: 10px; fill: currentColor; }
+  .text-orig {
+    flex: 1; padding: 6px 10px; font-size: 13px; color: var(--text2); line-height: 1.6; word-break: break-word;
+    background: #FAFAFA; border: 1px solid #E5E5E5;
+  }
+  textarea.text-edit {
+    flex: 1; padding: 8px 12px; font-size: 13px; color: var(--text); font-family: inherit;
+    resize: vertical; min-height: 36px; line-height: 1.6;
+    border: 2px solid #DDD; background: #fff; outline: none; font-weight: 500;
+  }
+  textarea.text-edit:focus { border-color: var(--border); box-shadow: 3px 3px 0 rgba(0,0,0,0.1); }
+
+  .seg-between {
+    height: 28px; display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.1s;
+  }
+  .seg-between:hover { opacity: 1; }
+  .seg-between-inner { display: flex; gap: 8px; }
+
+  .emo-btn {
+    font-size: 10px; padding: 5px 10px; border: 2px solid var(--border);
+    background: #fff; color: var(--text); cursor: pointer; font-family: inherit;
+    transition: all 0.1s; font-weight: 600; text-transform: uppercase;
+    box-shadow: 1px 1px 0 var(--border);
+  }
+  .emo-btn.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+  .emo-btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--border); }
+
+  #task-panel {
+    position: fixed; bottom: 0; right: 20px; width: 290px;
+    background: #fff; border: 2px solid var(--border);
+    box-shadow: 4px -2px 0 var(--border); z-index: 100; font-size: 12px;
+  }
+  #task-panel-header {
+    padding: 10px 16px; cursor: pointer; display: flex; justify-content: space-between;
+    font-weight: 700; border-bottom: 2px solid var(--border); user-select: none;
+    background: var(--yellow); text-transform: uppercase; letter-spacing: 0.5px;
+    font-size: 11px;
+  }
+  #task-panel-body { padding: 10px 16px 16px; max-height: 200px; overflow-y: auto; }
+  .task-item { padding: 8px 0; font-size: 11px; border-bottom: 1px solid #E5E5E5; display: flex; justify-content: space-between; font-weight: 500; }
+  .task-item:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+
+<header id="topbar">
+  <div style="display:flex;align-items:center">
+    <span id="brand">VOICEDUB</span>
+    <span id="version">v1.0.0</span>
+  </div>
+  <nav>
+    <button class="active">项目</button>
+    <button>音色库</button>
+    <button>模型</button>
+    <button>设置</button>
+  </nav>
+</header>
+
+<main>
+  <div class="page-header">
+    <span class="back-link">← 返回</span>
+    <h2>配音项目_2026-06-03</h2>
+    <div></div>
+  </div>
+
+  <div class="status-bar">
+    <button class="btn btn-accent">⚡ 批量配音</button>
+    <button class="btn btn-outline">⚡ 批量克隆</button>
+    <button class="btn btn-outline">导出音频</button>
+    <button class="btn btn-outline">SRT</button>
+    <button class="btn btn-outline">ASS</button>
+  </div>
+
+  <div class="speaker-filter">
+    <label><input type="checkbox" checked> 全选</label>
+    <span style="font-weight:700;font-size:11px">说话人:</span>
+    <label><span class="speaker-dot" style="background:#FF6B35"></span> <input type="checkbox" checked> 张三</label>
+    <label><span class="speaker-dot" style="background:#7B2FE8"></span> <input type="checkbox" checked> 李四</label>
+    <label><span class="speaker-dot" style="background:#0ED9A3"></span> <input type="checkbox" checked> 王五</label>
+  </div>
+
+  <div id="segments">
+    <div class="segment-card">
+      <div class="seg-header">
+        <input type="checkbox" class="seg-checkbox" checked>
+        <span class="seg-speaker" style="background:#FF6B35;color:#fff">张三</span>
+        <span class="seg-time">0.0s → 3.2s</span>
+        <span class="seg-badge">已配音</span>
+        <span class="seg-spacer"></span>
+        <div class="seg-actions">
+          <button class="emo-btn active">情绪</button>
+          <button class="btn-sm accent">重新配音</button>
+          <button class="btn-sm outline">克隆</button>
+          <button class="btn-sm success">下载</button>
+        </div>
+      </div>
+      <div class="seg-body">
+        <div class="text-row">
+          <span class="play-dot"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></span>
+          <div class="text-orig">大家好，欢迎收听今天的节目。今天我们聊一个有趣的话题。</div>
+        </div>
+        <div class="text-row">
+          <span class="play-dot"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></span>
+          <textarea class="text-edit">大家好，欢迎收听今天的节目。今天我们聊一个有趣的话题。</textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="seg-between"><div class="seg-between-inner"><button class="btn-sm ghost">+ 插入</button><button class="btn-sm ghost">合并</button></div></div>
+
+    <div class="segment-card">
+      <div class="seg-header">
+        <input type="checkbox" class="seg-checkbox" checked>
+        <span class="seg-speaker" style="background:#7B2FE8;color:#fff">李四</span>
+        <span class="seg-time">3.5s → 7.8s</span>
+        <span class="seg-spacer"></span>
+        <div class="seg-actions">
+          <button class="emo-btn">情绪</button>
+          <button class="btn-sm accent">开始配音</button>
+          <button class="btn-sm outline">克隆</button>
+        </div>
+      </div>
+      <div class="seg-body">
+        <div class="text-row">
+          <span class="play-dot"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></span>
+          <div class="text-orig">是啊，这个话题确实很有意思。</div>
+        </div>
+        <div class="text-row">
+          <span class="play-dot" style="visibility:hidden"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></span>
+          <textarea class="text-edit" placeholder="编辑台词...">是啊，这个话题确实很有意思。</textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="seg-between"><div class="seg-between-inner"><button class="btn-sm ghost">+ 插入</button><button class="btn-sm ghost">合并</button></div></div>
+
+    <div class="segment-card">
+      <div class="seg-header">
+        <input type="checkbox" class="seg-checkbox" checked>
+        <span class="seg-speaker" style="background:#0ED9A3;color:#1A1A1A">王五</span>
+        <span class="seg-time">8.1s → 12.6s</span>
+        <span class="seg-badge">已配音</span>
+        <span class="seg-spacer"></span>
+        <div class="seg-actions">
+          <button class="emo-btn active">情绪</button>
+          <button class="btn-sm accent">重新配音</button>
+          <button class="btn-sm outline">克隆</button>
+          <button class="btn-sm success">下载</button>
+        </div>
+      </div>
+      <div class="seg-body">
+        <div class="text-row">
+          <span class="play-dot"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></span>
+          <div class="text-orig">那我们开始吧，先从第一个问题说起。</div>
+        </div>
+        <div class="text-row">
+          <span class="play-dot"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></span>
+          <textarea class="text-edit">那我们开始吧，先从第一个问题说起。</textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="task-panel">
+  <div id="task-panel-header"><span>任务</span><span>2</span></div>
+  <div id="task-panel-body">
+    <div class="task-item"><span>批量配音 · 张三 0.0→3.2s</span><span style="color:var(--success);font-weight:700">✓ DONE 2.1s</span></div>
+    <div class="task-item"><span>批量配音 · 王五 8.1→12.6s</span><span style="color:var(--accent);font-weight:600">PROCESSING...</span></div>
+  </div>
+</div>
+
+</body>
+</html>
