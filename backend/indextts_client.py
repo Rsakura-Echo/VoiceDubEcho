@@ -8,7 +8,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent.parent
 INDEXTTS_DIR = PROJECT_ROOT / "model" / "indextts_repo"
-UV_EXE = PROJECT_ROOT / "venv" / "Scripts" / "uv.exe"
+UV_EXE = PROJECT_ROOT / "python" / "Scripts" / "uv.exe"
 
 _worker = None       # Popen handle
 _worker_lock = threading.Lock()

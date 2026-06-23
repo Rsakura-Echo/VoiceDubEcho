@@ -225,7 +225,7 @@ async def process_audio(project_id: str, num_speakers: int = 0):
     async def stream():
         yield ":ok\n\n"
 
-        venv_python = str(PROJECT_ROOT / "venv" / "Scripts" / "python.exe")
+        venv_python = str(PROJECT_ROOT / "python" / "python.exe")
         cli_script = str(Path(__file__).parent / "whisperx_cli.py")
         cmd = [
             venv_python, cli_script,
