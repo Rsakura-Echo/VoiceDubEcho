@@ -282,14 +282,12 @@ const Components = {
   toggleAudio(segId, type, url) {
     const iconId = (type === 'orig' ? 'play-orig-icon-' : 'play-dub-icon-') + segId;
     const icon = document.getElementById(iconId);
-    if (!icon) return;
     if (this._currentAudio && this._currentIconId === iconId && !this._currentAudio.paused) {
       this._currentAudio.pause(); return;
     }
     if (this._currentAudio) { this._currentAudio.pause(); this._restoreIcon(); }
     const a = new Audio(url); this._currentAudio = a; this._currentIconId = iconId;
-    // Show pause icon
-    icon.innerHTML = '<svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+    if (icon) icon.innerHTML = '<svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
     a.play().catch(e => { if (e.name !== 'AbortError') Components.showToast('播放失败', 'error'); this._restoreIcon(); });
     a.addEventListener('ended', () => this._restoreIcon());
     a.addEventListener('pause', () => this._restoreIcon());
